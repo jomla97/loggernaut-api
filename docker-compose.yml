@@ -1,0 +1,42 @@
+services:
+  api:
+    container_name: loggernaut-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      #- "80:443"
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+    networks:
+      - loggernaut-api
+    volumes:
+      - loggernaut-api:/data/db
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  mongodb:
+    container_name: loggernaut-db
+    restart: unless-stopped
+    image: mongodb/mongodb-community-server
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=root
+    networks:
+      - loggernaut-api
+    volumes:
+      - loggernaut-api:/data/db
+
+volumes:
+  loggernaut-api:
+
+networks:
+  loggernaut-api:
+    driver: bridge
