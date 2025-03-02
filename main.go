@@ -24,6 +24,6 @@ func main() {
 	}()
 	r := gin.Default()
 	r.GET("/ping", ping)
-	r.POST("/log", postLog)
+	r.POST("/ingest", ingest)
 	r.Run(":80")
 }
