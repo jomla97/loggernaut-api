@@ -15,7 +15,7 @@ services:
     networks:
       - loggernaut-api
     volumes:
-      - loggernaut-api:/data/db
+      - loggernaut-inbox:/data/inbox
     logging:
       driver: "local"
       options:
@@ -26,16 +26,14 @@ services:
     container_name: loggernaut-db
     restart: unless-stopped
     image: mongodb/mongodb-community-server
-    # environment:
-    #   - MONGO_INITDB_ROOT_USERNAME=root
-    #   - MONGO_INITDB_ROOT_PASSWORD=root
     networks:
       - loggernaut-api
     volumes:
-      - loggernaut-api:/data/db
+      - loggernaut-db:/data/db
 
 volumes:
-  loggernaut-api:
+  loggernaut-inbox:
+  loggernaut-db:
 
 networks:
   loggernaut-api:
