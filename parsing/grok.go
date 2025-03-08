@@ -6,7 +6,7 @@ type GrokParser struct {
 }
 
 // Parse parses the data using Grok patterns, returning an array of objects
-func (p GrokParser) Parse(data *[]byte) (entries []interface{}, err error) {
+func (p GrokParser) Parse(data *[]byte) (entries []map[string]interface{}, err error) {
 	//TODO: implement Grok parsing
-	return []interface{}{}, err
+	return entries, err
 }

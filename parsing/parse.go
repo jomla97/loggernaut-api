@@ -9,11 +9,11 @@ import (
 
 // Parser is an interface for log parsers, which can parse log data into a list of entries
 type Parser interface {
-	Parse(data *[]byte) (entries []interface{}, err error)
+	Parse(data *[]byte) (entries []map[string]interface{}, err error)
 }
 
 // parse parses the log at the specified path and inserts it into the database
-func parse(log inbox.Log) (entries []interface{}, err error) {
+func parse(log inbox.Log) (entries []map[string]interface{}, err error) {
 	// Read the log file data
 	data, err := log.Read()
 	if err != nil {

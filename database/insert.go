@@ -7,9 +7,13 @@ import (
 )
 
 // Insert the parsed entries of the specified log into the database
-func Insert(log inbox.Log, entries []interface{}) error {
-	//TODO: insert meta data
-	//TODO: fix, currently it does not work
-	_, err := Client.Database(databaseName).Collection(log.Meta.Source.System).InsertMany(context.TODO(), entries)
+func Insert(log inbox.Log, entries []map[string]interface{}) error {
+	for i, _ := range entries {
+		entries[i]["loggernaut_meta"] = log.Meta
+	}
+	_, err := Client.
+		Database(name).
+		Collection(log.Meta.Source.System).
+		InsertMany(context.TODO(), entries)
 	return err
 }

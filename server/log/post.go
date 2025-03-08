@@ -1,4 +1,4 @@
-package server
+package log
 
 import (
 	"fmt"
@@ -12,7 +12,8 @@ import (
 	"github.com/jomla97/loggernaut-api/parsing"
 )
 
-func ingest(c *gin.Context) {
+// Post handles the POST /log endpoint
+func Post(c *gin.Context) {
 	// Parse the multipart form
 	form, err := c.MultipartForm()
 	if err != nil {

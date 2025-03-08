@@ -12,16 +12,11 @@ type JSONParser struct {
 }
 
 // Parse parses the data as JSON, returning an array of objects
-func (p JSONParser) Parse(data *[]byte) (entries []interface{}, err error) {
+func (p JSONParser) Parse(data *[]byte) (entries []map[string]interface{}, err error) {
 	// Attempt to parse the data as an array of objects
-	var arr []map[string]interface{}
-	err = json.Unmarshal(*data, &arr)
+	err = json.Unmarshal(*data, &entries)
 	if err == nil {
 		fmt.Println("Parsed as array")
-		var entries []interface{}
-		for _, entry := range arr {
-			entries = append(entries, entry)
-		}
 		return entries, nil
 	}
 
@@ -30,7 +25,8 @@ func (p JSONParser) Parse(data *[]byte) (entries []interface{}, err error) {
 	err = json.Unmarshal(*data, &obj)
 	if err == nil {
 		fmt.Println("Parsed as object")
-		return []interface{}{obj}, nil
+		entries = append(entries, obj)
+		return entries, nil
 	}
 
 	// Attempt to parse each entry as an object
@@ -45,7 +41,7 @@ func (p JSONParser) Parse(data *[]byte) (entries []interface{}, err error) {
 	}
 
 	if err != nil {
-		return []interface{}{}, err
+		return []map[string]interface{}{}, err
 	}
 
 	return entries, err
