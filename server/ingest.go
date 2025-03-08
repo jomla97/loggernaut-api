@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jomla97/loggernaut-api/inbox"
+	"github.com/jomla97/loggernaut-api/parsing"
 )
 
 func ingest(c *gin.Context) {
@@ -66,33 +68,16 @@ func ingest(c *gin.Context) {
 
 	// Save the files to the inbox for later processing
 	for _, fileHeader := range append(logFileHeaders, metaFileHeaders...) {
-		err = c.SaveUploadedFile(fileHeader, filepath.Join("/data/inbox", fileHeader.Filename))
+		err = c.SaveUploadedFile(fileHeader, filepath.Join(inbox.Path, fileHeader.Filename))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("failed to save file: %s", err.Error())})
 			return
 		}
 	}
 
-	// // Open the file
-	// file, err := fileHeader[0].Open()
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("failed to open file: %s", err.Error())})
-	// 	return
-	// }
+	// Start the parsing process
+	parsing.Start()
 
-	// // Read the file into a buffer
-	// var buf bytes.Buffer
-	// if _, err := buf.ReadFrom(file); err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("failed to read file: %s", err.Error())})
-	// 	return
-	// }
-
-	// client.Database("logs").Collection("logs").InsertOne(context.TODO(), gin.H{
-	// 	"fileSystemPath": fileSystemPath,
-	// 	"system":         system,
-	// 	"tags":           tags,
-	// 	"log":            buf.String(),
-	// })
-
+	// Return a success response
 	c.Status(http.StatusCreated)
 }

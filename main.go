@@ -1,29 +1,19 @@
 package main
 
 import (
-	"context"
-	"os"
-
-	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/v2/mongo"
-	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	"github.com/jomla97/loggernaut-api/database"
+	"github.com/jomla97/loggernaut-api/parsing"
+	"github.com/jomla97/loggernaut-api/server"
 )
 
-var client *mongo.Client
-
 func main() {
-	c, err := mongo.Connect(options.Client().ApplyURI(os.Getenv("MONGO_URI")))
-	if err != nil {
-		panic(err)
-	}
-	client = c
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-	r := gin.Default()
-	r.GET("/ping", ping)
-	r.POST("/ingest", ingest)
-	r.Run(":80")
+	// Initialize the database into which logs will be inserted
+	database.Init()
+	defer database.Close()
+
+	// Start the parser, which will be restarted when needed as logs are received
+	parsing.Start()
+
+	// Start the server, which will listen for incoming requests
+	server.Start()
 }
