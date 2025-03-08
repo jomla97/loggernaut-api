@@ -7,6 +7,7 @@ import (
 
 // Start starts the web server
 func Start() {
+	//TODO: oauth
 	r := gin.Default()
 	r.GET("/ping", ping)
 	r.GET("/log/:system/*id", log.Get)
